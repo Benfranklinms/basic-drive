@@ -1,8 +1,10 @@
 import express from "express";
 import userRouter from "./routes/user.routes.js";
-const dotenv = require("dotenv");
-
+import dotenv from "dotenv";
+import connectToDB from "./config/db.js";
 dotenv.config();
+connectToDB();
+
 const app = express();
 
 

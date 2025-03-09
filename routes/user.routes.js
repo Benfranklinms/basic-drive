@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from 'express-validator';
 
 
 router.get("/register", (req, res) => {
@@ -18,4 +18,4 @@ body("username").trim().isLength({min: 3}),
     res.send(errors);
 });
 
-module.exports = router;
+export default router;
