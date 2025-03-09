@@ -3,6 +3,7 @@ const router = express.Router();
 import { body, validationResult } from 'express-validator';
 import userModel from "../models/user.model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 
 
@@ -56,6 +57,15 @@ router.post("/login",
         if(!isMatch){
             return res.status(400).json({message: "Username or password is incorrect"});
         }
+
+        const token = jwt.sign({
+            userId: user._id,
+            email: user.email,
+            username: user.username
+        }, process.env.JWT_SECRET)
+
+        res.cookie("token", token);
+        res.send("Logged in");
     });
 
 export default router;
