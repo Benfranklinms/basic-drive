@@ -20,3 +20,5 @@ function auth(req, res, next){
         return res.status(401).json({message: "You are not authenticated"});
     }
 }
+
+export default auth;

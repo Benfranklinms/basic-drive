@@ -2,15 +2,16 @@ import express from "express";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from '../config/supabase.js';
+import authMiddleware from "../middlewares/auth.js";
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get("/home", (req, res) => {
+router.get("/home", authMiddleware, (req, res) => {
     res.render("home");
 });
 
-router.post("/upload", upload.single("file"), async (req, res) => {
+router.post("/upload", authMiddleware, upload.single("file"), async (req, res) => {
     if (!req.file) {
         return res.status(400).send("No file uploaded");
     }
