@@ -1,8 +1,9 @@
 import express from "express";
-const router = express.Router();
 import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
 import { supabase } from '../config/supabase.js';
 
+const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/home", (req, res) => {
@@ -11,16 +12,17 @@ router.get("/home", (req, res) => {
 
 router.post("/upload", upload.single("file"), async (req, res) => {
     if (!req.file) {
-        return res.status(400).send("No file uploaded.");
+        return res.status(400).send("No file uploaded");
     }
 
     const fileBuffer = req.file.buffer;
-    const fileName = `${Date.now()}_${req.file.originalname}`;
+    const fileExtension = req.file.originalname.split('.').pop();
+    const fileName = `${uuidv4()}.${fileExtension}`;
 
     try {
         const { data, error } = await supabase
             .storage
-            .from('basic-drive') // Replace with your bucket name
+            .from('basic-drive')
             .upload(fileName, fileBuffer, {
                 contentType: req.file.mimetype,
             });
@@ -32,7 +34,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
         res.send({ message: "File uploaded successfully!", data });
     } catch (error) {
         console.error("Error uploading file:", error);
-        res.status(500).send("Error uploading file.");
+        res.status(500).send("Error uploading file");
     }
 });
 
