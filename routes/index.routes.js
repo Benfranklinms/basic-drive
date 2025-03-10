@@ -11,6 +11,12 @@ router.get("/home", authMiddleware, (req, res) => {
     res.render("home");
 });
 
+router.get("/home", authMiddleware, async (req, res) => {
+
+    const userfiles = await fileModel.find({ owner: req.user._id });
+    res.json(userfiles);
+});
+
 router.post("/upload", authMiddleware, upload.single("file"), async (req, res) => {
     if (!req.file) {
         return res.status(400).send("No file uploaded");
